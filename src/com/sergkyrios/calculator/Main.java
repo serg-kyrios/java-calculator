@@ -9,52 +9,72 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Введіть оператор (+ або -  , * , /): ");
-        String operator = scanner.nextLine();
+        while (true) {
 
-        System.out.print("Введіть два числа через пробіл: ");
-        int a = scanner.nextInt();
-        int b = scanner.nextInt();
+            System.out.print("Введіть оператор (+, -, *, /) або exit: ");
+            String operator = scanner.nextLine();
 
-        int result;
-
-        while (b == 0) {
-            System.out.print("Ділення на нуль неможливе. Введіть друге число ще раз: ");
-
-        }
-        while (a < 0 || b < 0) {
-            System.out.print("Будь ласка, введіть додатні числа: ");
-            a = scanner.nextInt();
-            b = scanner.nextInt();
-        }
-        while (!operator.equals("+") && !operator.equals("-") && !operator.equals("*") && !operator.equals("/")) {
-            System.out.print("Невідомий оператор. Введіть оператор (+ або - , * , /): ");
-            operator = scanner.nextLine();
-        }
-       while (operator.equals("exit")) {
-            System.out.println("Вихід з програми.");
-            return;
-        }
-        switch (operator) {
-            case "+":
-                result = Calculator.add(a, b);
+            if (operator.equals("exit")) {
+                System.out.println("Вихід з програми.");
                 break;
-            case "-":
-                result = Calculator.subtract(a, b);
-                break;
+            }
+
+            while (!operator.equals("+") && !operator.equals("-")
+                    && !operator.equals("*") && !operator.equals("/")) {
+
+                System.out.print("Невідомий оператор. Спробуйте ще раз: ");
+                operator = scanner.nextLine();
+            }
+
+            int a = readInt(scanner, "Введіть перше число: ");
+            int b = readInt(scanner, "Введіть друге число: ");
+
+            if (operator.equals("/")) {
+                while (b == 0) {
+                    System.out.print("Ділення на нуль заборонено. Введіть інше число: ");
+                    b = readInt(scanner, "");
+                }
+            }
+
+            int result;
+
+            switch (operator) {
+                case "+":
+                    result = Calculator.add(a, b);
+                    break;
+                case "-":
+                    result = Calculator.subtract(a, b);
+                    break;
                 case "*":
-                result = Calculator.multiply(a, b);
-                break;
+                    result = Calculator.multiply(a, b);
+                    break;
                 case "/":
-                result = Calculator.divide(a, b);
-                break;
+                    result = Calculator.divide(a, b);
+                    break;
+                default:
+                    continue;
+            }
 
-            default:
-
-                return;
-
+            System.out.println("Результат: " + result);
+            System.out.println();
         }
 
-        System.out.println("Результат: " + result);
+        scanner.close();
+    }
+
+    // 🔹 Метод безпечного введення числа
+    static int readInt(Scanner scanner, String message) {
+        if (!message.isEmpty()) {
+            System.out.print(message);
+        }
+
+        while (!scanner.hasNextInt()) {
+            System.out.print("Це не число. Спробуйте ще раз: ");
+            scanner.next();
+        }
+
+        int value = scanner.nextInt();
+        scanner.nextLine(); // 🔥 важливо
+        return value;
     }
 }
